@@ -16,6 +16,7 @@ In this trial study, we collected 24-hours of images every 60 seconds of the Mai
         * loops through each folder in `day-by-day\mm-dd`
         * unzips all of the pictures from compressed folders
         * deletes all files outside of a 15-minute increment between 6AM and 8PM
+        * resizes the images to 800 x 600
         * copies all files to specified folder in Google Drive
     2. `townhall-data\links-for-automan\list-parking-links.py`: Create a list of links from the Google Drive folder using the [Google Drive API](https://developers.google.com/drive/)
         * cycles through every file in the specified Google Drive folder ID

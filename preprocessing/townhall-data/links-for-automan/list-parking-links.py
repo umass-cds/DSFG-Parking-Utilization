@@ -22,7 +22,7 @@ def list_parking_image_links(service, folder_id):
     folder_id: ID of the folder to print files from.
   """
   page_token = None
-  f = open('parking-data-links.txt','w')
+  f = open('parking-800by600-data-links.txt','w')
   while True:
     try:
       param = {}
@@ -50,7 +50,7 @@ def main():
     service = build('drive', 'v2', http=creds.authorize(Http()))
 
     # List all image links in a .txt file
-    list_parking_image_links(service, '1Ga5cmQ8MpcyI5zkAUU-SZK5pGGD1SodQ')
+    list_parking_image_links(service, '10HIEz9f-RUa6V9QaLFoLXJICqQPy_F3S')
     
 if __name__ == '__main__':
     main()
