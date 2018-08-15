@@ -16,10 +16,9 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 # ~~~~ DEFINE VAIRABLES ~~~~~
 # NOTE: Update dir_name with local directories
 path_to_github = 'C:\\Users\\house\\Documents\\GitHub\\DSFG\\DSFG-Parking-Utilization'
-github_data_path = '\\preprocessing\\townhall-data\\data'
+github_data_path = '\\preprocessing\\townhall-data\\entire-dataset'
 path_to_gdrive = 'C:\\Users\\house\\Google Drive (khouse@umass.edu)\\DS4Good - Parking Area Utilization'
-gdrive_data_path = '\\Datasets\\Town Hall Lot Dataset\\pictures-600by800' 
-
+gdrive_data_path = '\\Datasets\\Town Hall Lot Dataset\\pictures_8-6to8-12' 
 dir_name = path_to_github + github_data_path
 dest = path_to_gdrive + gdrive_data_path
 
@@ -31,7 +30,7 @@ def save_image(file_path, file_name):
 	im = Image.open(file_path)
 	im = im.resize((new_width, new_height), Image.ANTIALIAS)
 	im.save(file_path)
-	#shutil.copy(file_path, dest) # Remove comment if sending to GDrive
+	shutil.copy(file_path, dest) # Remove comment if sending to GDrive
 	print('saving: %s' % file_name)
 
 def main():

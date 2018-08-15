@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Downtown Amherst Parking Utilization</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/dc.css"/>
+    <link rel="icon" type="image/x-icon" href="dc.logo.png"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css"/>
+    <style>
+        #monthly-volume-chart g.y {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+<h2>Amherst Parking Utilization</h2>
+<div class="row">
+    <!-- Select which Methods to Include -->
+    <div class="pretty p-switch p-fill">
+        <input type="checkbox" id="mlcheck" data-bind="checked: params.availToStream" checked/>
+        <div class="state p-primary">
+            <label>ParkMobile</label>
+        </div>
+    </div>
+    <div class="pretty p-switch p-fill">
+        <input type="checkbox" data-bind="checked: params.availToStream" checked/>
+        <div class="state p-success">
+            <label>Crowdsourcing</label>
+        </div>
+    </div>
+    <div class="pretty p-switch p-fill">
+        <input type="checkbox" data-bind="checked: params.availToStream" checked/>
+        <div class="state p-warning">
+            <label>Machine Learning</label>
+        </div>
+    </div>
+    </div>
+    <div class="row">
+    <div id="yearly-bubble-chart" class="dc-chart">
+        <a class="reset" href="javascript:yearlyBubbleChart.filterAll();dc.redrawAll();"
+           style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div class="row">
+    <div id="gain-loss-chart">
+        <strong>Total Under/Over Utilized</strong>
+        <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>  
+    <div id="day-of-week-chart">
+        <strong>Day of Week</strong>
+        <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+    <div id="time-of-day-chart">
+        <strong>Time of Day</strong>
+        <a class="reset" href="javascript:timeOfDayChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+    <div id="test_composed">
+        <strong>Total Utilization</strong>
+        <a class="reset" href="javascript:volumeChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+
+</div>
+
+<div class="row">
+    <div id="monthly-move-chart">
+        <strong>Average Occupancy Across Models</strong>
+        <span class="reset" style="display: none;">range: <span class="filter"></span></span>
+        <a class="reset" href="javascript:moveChart.filterAll();volumeChart.filterAll();dc.redrawAll();"
+           style="display: none;">reset</a>
+        <div class="clearfix"></div>
+    </div>
+</div>
+
+<div class="row">
+    <div id="monthly-volume-chart">
+    </div>
+    <p class="muted pull-right" style="margin-right: 15px;">select a time range to zoom in</p>
+</div>
+
+<div class="row">
+    <div>
+        <div class="dc-data-count">
+            <span class="filter-count"></span> selected out of <span class="total-count"></span> records | <a
+                href="javascript:dc.filterAll(); dc.renderAll();">Reset All</a>
+        </div>
+    </div>
+    <table class="table table-hover dc-data-table">
+    </table>
+</div>
+
+<div class="clearfix"></div>
+</div>
+
+</div>
+
+<script type="text/javascript" src="js/d3.js"></script>
+<script type="text/javascript" src="js/crossfilter.js"></script>
+<script type="text/javascript" src="js/dc.js"></script>
+<script type="text/javascript" src="vis.js"></script>
+
+</body>
+</html>

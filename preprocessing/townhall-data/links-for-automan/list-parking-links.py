@@ -31,7 +31,10 @@ def list_parking_image_links(service, folder_id):
       children = service.children().list(
           folderId=folder_id, **param).execute()
       for child in children.get('items', []):
-        link = 'https://drive.google.com/uc?id=' + child['id']
+        file_ID = child['id']
+        file_name = service.files().get(fileId=file_ID, fields='title').execute()
+        file_name = file_name["title"]
+        link = 'https://drive.google.com/uc?id=' + child['id'] + "," + file_name
         print(link)
         f.write(link + ',\n')
       page_token = children.get('nextPageToken')
