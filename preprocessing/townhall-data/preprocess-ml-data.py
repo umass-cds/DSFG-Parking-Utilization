@@ -6,7 +6,11 @@ import sys
 
 # DELETE .DS-STORE in dataset folder if issues with first file in array
 
-mypath = 'C:\\Users\\house\\Google Drive (khouse@umass.edu)\\DS4Good - Parking Area Utilization\\Datasets\\Town Hall Lot Dataset\\pictures (1)'
+if os.path.isdir('cropped-images'):
+    shutil.rmtree('cropped-images')
+os.mkdir("cropped-images", 0755);
+
+mypath = 'pictures-1280by720'
 img_path = []
 
 # Store all images in an Array
@@ -18,7 +22,7 @@ for n in range(0, len(onlyfiles)):
 		images[n] = cv2.imread(join(mypath,onlyfiles[n]) )
 		img_path += onlyfiles
 	except:
-		print('hello')
+		print('error')
 
 # Loop through each image and crop/save
 print("\nProcessing all Images in Path...")
