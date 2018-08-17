@@ -232,7 +232,7 @@ function update_models(){
             .group(pm_utilization_group);
 
         dayOfWeekChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
-            .width(100)
+            .width(70)
             .height(300)
             .margins({top: 20, left: 10, right: 10, bottom: 20})
             .group(dayOfWeekGroup)
@@ -250,7 +250,7 @@ function update_models(){
             .xAxis().ticks(4);
 
         timeOfDayChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
-            .width(100)
+            .width(60)
             .height(300)
             .margins({top: 20, left: 2, right: 6, bottom: 20})
             .group(timeOfDayGroup)
@@ -261,7 +261,7 @@ function update_models(){
             .xAxis().ticks(4);
 
         composite
-            .width(650)
+            .width(550)
             .height(300)
             .transitionDuration(800)
             .x(d3.scaleTime().domain(d3.extent(data, function(d) { return d.dd; })))
@@ -270,7 +270,7 @@ function update_models(){
             .elasticY(true)
             .legend(dc.legend().x(90).y(20).itemHeight(10).gap(5))
             .renderHorizontalGridLines(true)
-            .margins({top: 20, right: 20, bottom: 25, left: 40})
+            .margins({top: 20, right: 5, bottom: 25, left: 35})
             .rangeChart(volumeChart)
             .compose([
                 dc.lineChart(composite)
@@ -291,7 +291,7 @@ function update_models(){
         composite.xAxis().ticks(10)
 
         // # Bar Chart
-        volumeChart.width(800) // dc.barChart('#monthly-volume-chart', 'chartGroup');
+        volumeChart.width(790) // dc.barChart('#monthly-volume-chart', 'chartGroup');
             .height(40)
             .margins({top: 0, right: 50, bottom: 20, left: 40})
             .dimension(moveDays)

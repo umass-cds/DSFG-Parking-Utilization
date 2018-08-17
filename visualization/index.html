@@ -13,7 +13,7 @@
     </style>
 </head>
 <body>
-<div class="container-fluid">
+<div class="flex-container">
     <div class="row">
         <div class="col-md-4">
             <h2>Amherst Parking Utilization</h2>
@@ -55,7 +55,7 @@
                         <div class="clearfix"></div>
                     </div> 
                 </div>
-                <div class="col-md-2" style="text-align:center; display: inline-table;">
+                <div class="col-md-2">
                 <strong>Average Occupancy</strong>
                   <div class = "row small-box">
                     <div id="pm-number-box"></div>
@@ -86,12 +86,12 @@
                     <div class="clearfix"></div>
                 </div>
                 <div id="day-of-week-chart">
-                    <strong>Day of Week</strong><br>
+                    <strong>Day</strong><br>
                     <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
                 <div id="time-of-day-chart">
-                    <strong>Time of Day</strong><br>
+                    <strong>Time</strong><br>
                     <a class="reset" href="javascript:timeOfDayChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
@@ -116,7 +116,7 @@
 <script type="text/javascript" src="js/d3.js"></script>
 <script type="text/javascript" src="js/crossfilter.js"></script>
 <script type="text/javascript" src="js/dc.js"></script>
-<script type="text/javascript" src="vis.js"></script>
+<script type="text/javascript" src="js/vis.js"></script>
 <script type="text/javascript" href="https://cdnjs.cloudflare.com/ajax/libs/reductio/0.6.3/reductio.js"></script>
 
 </body>

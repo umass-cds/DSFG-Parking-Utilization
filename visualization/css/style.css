@@ -622,7 +622,7 @@ pre code {
 
 @media (min-width: 1200px) {
   .container {
-    max-width: 1140px;
+    max-width: 1200px;
   }
 }
 
@@ -6925,6 +6925,14 @@ button.bg-dark:focus {
       -ms-flex-direction: row !important;
           flex-direction: row !important;
 }
+
+.flex-container{
+  margin:2%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 
 .flex-column {
   -webkit-box-orient: vertical !important;
