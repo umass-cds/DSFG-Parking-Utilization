@@ -21,9 +21,9 @@ def mobile_excel(xls_file_name, first_run):
     wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
     # Test if first run to add header or not
     if first_run == True:
-    	start_rownum = 11
+    	start_rownum = 4
     else:
-    	start_rownum = 12
+    	start_rownum = 5
     # Write the new CSV
     for rownum in range(start_rownum,sh.nrows):
         	wr.writerow(sh.row_values(rownum))
@@ -54,7 +54,7 @@ def main():
 
 	# Import mobile data
 	first_run = True # Initialize the Header
-	mobile_path = "csvs/mobile/*.xls"
+	mobile_path = "csvs/mobile/*.xlsx"
 	for fname in glob.glob(mobile_path):
 	    mobile_excel(fname, first_run)
 	    first_run = False
