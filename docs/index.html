@@ -42,14 +42,14 @@
                 </div>
             </div>
             <h5>Insights</h5>
-            <p>These data tell an interesting story. Click on the utilization pie chart to see what days and times the parking lot was most overutilized underutilized. Notice when the parking lot is overutilized, there tends to be higher ParkMobile compiance. Note that the ParkMobile is similar to crowdsourcing, but not available on Sundays. Span over different days to compare the days of the week. Why does the daily occupancy appear to be bimodal? Filtering for days and utilization gives key insight into the usage of this downtown parking lot.</p>
+            <p id="insights">These data tell an interesting story. Click on the utilization pie chart to see what days and times the parking lot was most <a href="javascript:filter(['overutilized',null, null, null, null])">overutilized</a>. Notice when the parking lot is overutilized, there tends to be higher ParkMobile compiance. Explore what the occupancy looks like at <a href="javascript:filter([null,null,null,null,[[12,13,14,17,18,19]],null])">peak times</a>. Investigate the <a href="javascript:filter([null,null,null,[['6.Sat','0.Sun']],null,null])">weekends</a> and compare occupancy to <a href="javascript:filter([null,null,null,null,null,[new Date(2018, 6, 30),new Date(2018, 7, 4)]])">weekdays</a>. Why does the daily occupancy appear to be <a href="javascript:filter([null,null,null,null,null,[new Date(2018, 7, 1),new Date(2018, 7, 3)]])">bimodal</a>? These measures give unprecedented insight into occupancy of the Main Street parking lot.</p>
             <h5>Future Work</h5>
             <p>While these data give a snapshot into Amherst's parking utilization, there are many more areas to investigate. This study has the potential to expand to new parking areas and time periods when college students return to campus.</p>
         </div>
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-3">
-                    <div id="gain-loss-chart">
+                    <div id="gain-loss-chart" class="chart">
                         <strong>Total Under/Over Utilized</strong>
                         <a class="reset" href="javascript:gainOrLossChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                         <div class="clearfix"></div>
@@ -68,10 +68,10 @@
                   </div>
                 </div>
                 <div class="col-md-5">
-                    <div id="difference-chart">
+                    <div id="difference-chart" class="chart">
                         <select id="selectGraph" onchange='update_models()' style="margin-left:10px; margin-bottom:0px; width:110px;">
                           <option value="pm">Park Mobile</option>
-                          <!-- hide until bug is fixed<option value="ml">Machine Learning</option>-->
+                          <!--<option value="ml">Machine Learning</option>-->
                         </select>
                         <strong id="parkmobilelabel"></strong>
                         <span class="reset" style="display: none;"></span>
@@ -81,16 +81,16 @@
                 </div>
             </div>
             <div class="row">
-                <div id="test_composed">
+                <div id="test_composed" class="chart">
                     <strong>Total Utilization</strong>
                     <div class="clearfix"></div>
                 </div>
-                <div id="day-of-week-chart">
+                <div id="day-of-week-chart" class="chart">
                     <strong>Day</strong><br>
                     <a class="reset" href="javascript:dayOfWeekChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>
                 </div>
-                <div id="time-of-day-chart">
+                <div id="time-of-day-chart" class="chart">
                     <strong>Time</strong><br>
                     <a class="reset" href="javascript:timeOfDayChart.filterAll();dc.redrawAll();" style="display: none;">reset</a>
                     <div class="clearfix"></div>

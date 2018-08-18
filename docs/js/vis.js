@@ -19,19 +19,38 @@ var differenceChart = dc.lineChart('#difference-chart');
 var boxMT = dc.numberDisplay("#mt-number-box")
 var boxML = dc.numberDisplay("#ml-number-box")
 var boxPM = dc.numberDisplay("#pm-number-box")
+
+var charts = [
+    gainOrLossChart,
+    differenceChart,
+    composite,
+    dayOfWeekChart,
+    timeOfDayChart,
+    volumeChart];
+
 // ### Anchor Div for Charts
 
+window.filter = function(filters) {
+    filters.forEach(function(d, i) { charts[i].filter(d); });
+    dc.renderAll();
+  };
+
+  window.reset = function(i) {
+    charts[i].filter(null);
+    dc.renderAll();
+  };
 //### Load your data
 function update_models(){
     var ml_check = document.getElementById("mlcheck").checked;
     var mt_check = document.getElementById("mtcheck").checked;
     var pm_check = document.getElementById("pmcheck").checked;
 
+
     var e = document.getElementById("selectGraph");
     var strUser = e.options[e.selectedIndex].value;
-    console.log(strUser)
+    d3.csv('data.csv').then(function (data) { 
+        //define filter for links in text
 
-    d3.csv('sample_output.csv').then(function (data) {
         var forceMLPlot = false
         var data = data.map(function(d) {
           if (ml_check) {var ml_map = d.ml_occupancy} else {var ml_map = 0}
@@ -43,7 +62,6 @@ function update_models(){
 
         // hide plot when crowdsourcing is off
         if (mt_check == false){
-            console.log('selectGraph')
              document.getElementById('difference-chart').setAttribute("style", "display:none;");
         }
         else{
@@ -87,7 +105,7 @@ function update_models(){
             return time;
         });
 
-         var diffDimension = ndx.dimension(function (d) {
+         var diffDimension_pm = ndx.dimension(function (d) {
             var day = d.dd.getDay();
             if(day > 0){ //not sunday
                 var time = d.dd.getHours();
@@ -98,19 +116,30 @@ function update_models(){
             }
         });
 
-        function reduceAdd(p, v) {
+        var diffDimension_ml = ndx.dimension(function (d) {
+            var day = d.dd.getDay();
+            if(day > 0){ //not sunday
+                var time = d.dd.getHours();
+                return time;
+            }
+            else{
+                return -10000;
+            }
+        });
+
+        function reduceMLAdd(p, v) {
           ++p.count;
-          p.total += v.value;
+          p.total += (v.ml_occupancy - v.mt_occupancy);
           return p;
         }
 
-        function reduceRemove(p, v) {
+        function reduceMLRemove(p, v) {
           --p.count;
-          p.total -= v.value;
+          p.total -= (v.ml_occupancy - v.mt_occupancy);
           return p;
         }
 
-        function reduceInitial() {
+        function reduceMLInitial() {
           return {count: 0, total: 0};
         }
 
@@ -123,6 +152,34 @@ function update_models(){
                 }
             };
         }
+         function reduceDiffAdd(p, v) {
+                ++p.count;
+                p.total += (v.pm_occupancy - v.mt_occupancy);
+                if (p.count == 0) {
+                    p.average = 0;
+                } else {
+                    p.average = p.total / p.count;
+                };
+                return p;
+            }
+            function reduceDiffRemove(p, v) {
+                --p.count;
+                p.total -= (v.pm_occupancy - v.mt_occupancy);
+                if (p.count == 0) {
+                    p.average = 0;
+                } else {
+                    p.average = p.total / p.count;
+                };
+                return p;
+            }
+            function reduceDiffInitial() {
+                return {
+                    count: 0,
+                    total: 0,
+                    average: 0
+                };
+        }
+        var average = function(d) {return d.n ? d.tot / d.n : 0;};
         // ## Groups
         var volumeByDayGroup = moveDays.group().reduceSum(function (d) {
             return (d.pm_occupancy + d.mt_occupancy + d.ml_occupancy)/3;
@@ -133,23 +190,23 @@ function update_models(){
         var mt_group = dateDimension.group().reduceSum(function (d) {return d.mt_occupancy;})
         var pm_group  = dateDimension.group().reduceSum(function (d) {return d.pm_occupancy;});
         var ml_group  = dateDimension.group().reduceSum(function (d) {return d.ml_occupancy;});
-        var pm_diff_group  = diffDimension.group().reduceSum(function (d) {return d.pm_occupancy - d.mt_occupancy;});
-        var ml_diff_group  = timeOfDay.group().reduceSum(function (d) {return d.ml_occupancy - d.mt_occupancy;});
+        var pm_diff_group = diffDimension_pm.group().reduce(reduceDiffAdd, reduceDiffRemove, reduceDiffInitial);
+        var ml_diff_group  = diffDimension_ml.group().reduce(reduceMLAdd, reduceMLRemove, reduceMLInitial);
 
         // # Calculate total average Occupancy
         var mt_utilization_group = ndx.groupAll()
                                         .reduce( function (p, v) {++p.n;
                                                                     p.tot += (v.mt_occupancy / 31.0);
                                                                     return p;},
-                                                function (p, v) {--p.n;p
-                                                                    .tot -= (v.mt_occupancy / 31.0);
+                                                function (p, v) {--p.n;
+                                                                    p.tot -= (v.mt_occupancy / 31.0);
                                                                     return p;},
                                                 function () { return {n:0,tot:0}; });
         var ml_utilization_group = ndx.groupAll()
-                                        .reduce( function (p, v) {++p.n;
+                                        .reduce( function (p, v) {if(v.ml_occupancy!=0){++p.n;} //filter out
                                                                     p.tot += (v.ml_occupancy / 31.0);
                                                                     return p;},
-                                                function (p, v) {--p.n;
+                                                function (p, v) {if(v.ml_occupancy!=0){--p.n;}
                                                                     p.tot -= (v.ml_occupancy / 31.0);
                                                                     return p;},
                                                 function () { return {n:0,tot:0}; });
@@ -161,8 +218,18 @@ function update_models(){
                                                                     p.tot -= (v.pm_occupancy / 31.0);
                                                                     return p;},
                                                 function () { return {n:0,tot:0}; });
-        var average = function(d) {return d.n ? d.tot / d.n : 0;};
-        var ml_diff_groupNoSundays = remove_small_bins(pm_diff_group, -1000); //remove Sunday Outliers
+       
+       function remove_empty_bins(source_group) {
+            return {
+                all:function () {
+                    return source_group.all().filter(function(d) {
+                        return d.value != 0;
+                    });
+                }
+            };
+        }
+
+        var filtered_ml_group = remove_empty_bins(ml_diff_group) // or filter_bins, or whatever
 
         // # Pie Chart
         gainOrLossChart // dc.pieChart('#gain-loss-chart', 'chartGroup')
@@ -185,37 +252,40 @@ function update_models(){
 
         // # Difference Chart
         if(strUser=="pm"){
-        document.getElementById('parkmobilelabel').innerHTML = 'Compliance per Hour';
+        document.getElementById('parkmobilelabel').innerHTML = 'Avg Compliance per Hour';
+        differenceChart
+            .margins({top: 20, right: 50, bottom: 25, left: 15})
+            .width(400)
+            .height(200)
+            .renderArea(true)
+            .x(d3.scaleLinear().domain([8,19]))
+            .valueAccessor(function(p) { return p.value.average; })
+            .yAxisLabel('')
+            .elasticY(true)
+            .elasticX(false)
+            .dimension(diffDimension_pm)
+            .colors('#f0ad4e')
+            .group(pm_diff_group, "Park Mobile")
+            .brushOn(true);
+        }
+        else {
+        differenceChart.filterAll();dc.redrawAll();
+        document.getElementById('parkmobilelabel').innerHTML = 'MAE over Time';
         differenceChart
             .margins({top: 20, right: 50, bottom: 25, left: 15})
             .width(400)
             .height(200)
             .renderArea(true)
             .x(d3.scaleLinear().domain([6,19]))
-            .yAxisLabel('')
-            .elasticY(true)
+            .y(d3.scaleLinear().domain([6,19]))
+            .valueAccessor(function(p) { return p.value.total; })
             .elasticX(false)
-            .dimension(diffDimension)
-            .colors('#f0ad4e')
-            .group(ml_diff_groupNoSundays, "Park Mobile")
+            .elasticY(true)
+            .dimension(diffDimension_ml)
+            .colors('#5bc0de')
+            .group(filtered_ml_group)
             .brushOn(true);
-        }
-        else {
-        document.getElementById('parkmobilelabel').innerHTML = 'Error over Time';
-        differenceChart
-            .margins({top: 20, right: 50, bottom: 25, left: 15})
-            .width(400)
-            .height(200)
-            .renderArea(true)
-            .x(d3.scaleTime().domain(d3.extent(data, function(d) { return d.hour; })))
-            .y(d3.scaleLinear().domain([-300,300]))
-            .round(d3.timeHour.round)
-            .elasticX(true)
-           // .elasticY(true)
-            .dimension(timeOfDay)
-            .colors('#f0ad4e')
-            .group(ml_diff_group)
-            .brushOn(true)
+        dc.renderAll();
         }
 
         boxMT
@@ -247,7 +317,7 @@ function update_models(){
                 return d.value;
             })
             .elasticX(true)
-            .xAxis().ticks(4);
+            .xAxis().ticks(2);
 
         timeOfDayChart /* dc.rowChart('#day-of-week-chart', 'chartGroup') */
             .width(60)
@@ -258,10 +328,10 @@ function update_models(){
             .dimension(timeOfDay)
             // Title sets the row text
             .elasticX(true)
-            .xAxis().ticks(4);
+            .xAxis().ticks(3);
 
         composite
-            .width(550)
+            .width(650)
             .height(300)
             .transitionDuration(800)
             .x(d3.scaleTime().domain(d3.extent(data, function(d) { return d.dd; })))
@@ -270,7 +340,7 @@ function update_models(){
             .elasticY(true)
             .legend(dc.legend().x(90).y(20).itemHeight(10).gap(5))
             .renderHorizontalGridLines(true)
-            .margins({top: 20, right: 5, bottom: 25, left: 35})
+            .margins({top: 20, right: 10, bottom: 25, left: 35})
             .rangeChart(volumeChart)
             .compose([
                 dc.lineChart(composite)

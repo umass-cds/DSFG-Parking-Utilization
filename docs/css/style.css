@@ -209,13 +209,30 @@ sup {
 a {
   color: #18BC9C;
   text-decoration: none;
-  background-color: transparent;
-  -webkit-text-decoration-skip: objects;
+  /*background-color: transparent;*/
 }
 
-a:hover {
-  color: #0f7864;
+a:hover{
   text-decoration: underline;
+}
+
+#insights a{
+    background:#FFFFCC;
+  text-decoration: none;
+  /*background-color: transparent;*/
+  -webkit-text-decoration-skip: objects;
+    -o-transition:.5s;
+  -ms-transition:.5s;
+  -moz-transition:.5s;
+  -webkit-transition:.5s;
+  /* ...and now for the proper property */
+  transition:.5s;
+}
+
+#insights a:hover {
+  color: #0f7864;
+  background:yellow;
+  text-decoration: none;
 }
 
 a:not([href]):not([tabindex]) {
@@ -623,7 +640,7 @@ pre code {
 @media (min-width: 1200px) {
   .container {
     max-width: 1200px;
-  }
+  } 
 }
 
 .container-fluid {
@@ -6927,7 +6944,8 @@ button.bg-dark:focus {
 }
 
 .flex-container{
-  margin:2%;
+  margin-left:2%;
+  margin-right:2%;
   display: flex;
   align-items: center;
   justify-content: center;
